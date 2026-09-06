@@ -1,28 +1,29 @@
 // Input validation middleware
 export const validateEmail = (email) => {
+  if (typeof email !== 'string') return false;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  return emailRegex.test(email.trim());
 };
 
 export const validatePhoneNumber = (phone) => {
-  // Allow various phone formats
-  const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-  return phoneRegex.length > 0 && phoneRegex.test(phone);
+  if (typeof phone !== 'string' || phone.trim().length === 0) return false;
+  const phoneRegex = /^[\d\s\-+()]+$/;
+  return phoneRegex.test(phone.trim());
 };
 
 export const validateString = (str, minLength = 1, maxLength = 1000) => {
   return typeof str === 'string' && str.length >= minLength && str.length <= maxLength;
 };
 
-export const validateInteger = (num) => {
-  return Number.isInteger(parseInt(num)) && parseInt(num) > 0;
+export const validateInteger = (value) => {
+  if (typeof value === 'number') return Number.isInteger(value) && value > 0;
+  if (typeof value !== 'string' || !/^\d+$/.test(value.trim())) return false;
+  return Number(value) > 0;
 };
 
-// Middleware to validate and sanitize inputs
 export const validateInput = (req, res, next) => {
   if (req.body) {
-    // Remove any script tags or potentially harmful content
-    Object.keys(req.body).forEach(key => {
+    Object.keys(req.body).forEach((key) => {
       if (typeof req.body[key] === 'string') {
         req.body[key] = req.body[key]
           .trim()
@@ -34,12 +35,11 @@ export const validateInput = (req, res, next) => {
   next();
 };
 
-// Middleware to check for malicious patterns
 export const checkMaliciousPatterns = (req, res, next) => {
   const body = JSON.stringify(req.body);
   const maliciousPatterns = [
-    /(\$where|\$ne|\$gt|\$regex)/gi,  // NoSQL injection
-    /(union|select|insert|update|delete|drop)/gi,  // SQL injection
+    /(\$where|\$ne|\$gt|\$regex)/gi,
+    /\b(union\s+select|select\s+.+\s+from|insert\s+into|update\s+\w+\s+set|delete\s+from|drop\s+(table|database))\b/gi,
   ];
 
   for (const pattern of maliciousPatterns) {
@@ -47,7 +47,7 @@ export const checkMaliciousPatterns = (req, res, next) => {
       console.warn(`Malicious pattern detected from IP: ${req.ip}`);
       return res.status(400).json({
         success: false,
-        message: 'Invalid input detected'
+        message: 'Invalid input detected',
       });
     }
   }
