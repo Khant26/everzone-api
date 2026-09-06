@@ -21,7 +21,7 @@ Express.js backend for EverZone Admin Dashboard and Frontend.
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd EverZone_Backend
+cd everzone-api
 ```
 
 2. Install dependencies:
@@ -208,7 +208,7 @@ CREATE TABLE contact_forms (
 ## Project Structure
 
 ```
-EverZone_Backend/
+everzone-api/
 ├── src/
 │   ├── config/
 │   │   ├── database.js       # Database connection

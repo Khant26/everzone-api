@@ -394,7 +394,7 @@ curl -X DELETE http://localhost:5000/api/admin/contact-forms/1 \
 ### Step 1: Start Server
 The default superadmin account is automatically created on startup.
 ```bash
-cd EverZone_Backend
+cd everzone-api
 npm run dev
 ```
 
