@@ -2,6 +2,10 @@
 
 Express.js backend for EverZone Admin Dashboard and Frontend.
 
+## Product repository
+
+This service is also maintained as the [`api`](https://github.com/Khant26/everzone/tree/api) branch of the combined [EverZone repository](https://github.com/Khant26/everzone). The original repository is preserved.
+
 ## Features
 
 - **Services Management**: Create, read, update, and delete services (image, title, description)
